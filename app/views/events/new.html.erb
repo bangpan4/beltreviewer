@@ -1,0 +1,97 @@
+<h2>Welcome, <%= @user.first_name %></h2>
+<a href="/users/<%= @user.id %>/edit">Edit my profile</a>
+<h3>Events at your state</h3>
+<table border="1">
+  <tr>
+    <th>Name</th>
+    <th>date</th>
+    <th>city</th>
+    <th>state</th>
+    <th>host</th>
+    <th>action/status</th>
+  </tr>
+    <% @events.each do |event| %>
+      <tr>
+        <td><a href="/events/<%= event.id %>"><%= event.name %></a></td>
+        <td><%= event.date %></td>
+        <td><%= event.city %></td>
+        <td><%= event.state %></td>
+        <td><%= event.user.first_name %></td>
+        <% if event.user == current_user %>
+        <td><form action="/events/<%= event.id %>" method="post">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <input type="hidden" name="_method" value="delete">
+          <input type="submit" value="Delete">
+        </form></td>
+        <% elsif not event.users.include?(current_user) %>
+        <td><form action="/joins" method="post">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <input type="hidden" name="join[event_id]" value="<%=event.id%>">
+          <input type="submit" value="Join">
+        </form></td>
+        <%else%>
+        <td><form action="/joins/<%=Join.where(user:current_user, event: event).first.id%>" method="post">
+           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+           <input type="hidden" name="_method" value="delete">
+           Joining <input type="submit" value="Cancle">
+        </form></td>
+        <% end%>
+      </tr>
+    <%end%>
+</table>
+
+<h3>Events on other states</h3>
+<table border="1">
+  <tr>
+    <th>Name</th>
+    <th>date</th>
+    <th>city</th>
+    <th>state</th>
+    <th>host</th>
+    <th>action/status</th>
+  </tr>
+  <% @other_events.each do |event| %>
+      <tr>
+        <td><a href="/events/<%= event.id %>"><%= event.name  %></a></td></a>  
+        <td><%= event.date %></td>
+        <td><%= event.city %></td>
+        <td><%= event.state %></td>
+        <td><%= event.user.first_name %></td>
+        <% unless event.users.include?(current_user) %>
+        <td><form action="/joins" method="post">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <input type="hidden" name="join[event_id]" value="<%=event.id%>">
+          <input type="submit" value="Join">
+        </form></td>
+        <%else%>
+        <td><form action="/joins/<%=Join.where(user:current_user, event: event).first.id%>" method="post">
+           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+           <input type="hidden" name="_method" value="delete">
+           Joining <input type="submit" value="Cancle">
+        </form></td>
+        <% end%>
+      </tr>
+  <%end%>
+</table>
+
+<h2>Add events</h2>
+<form action="/events" method="post">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+
+  Name: <input type="text" name="event[name]"><br>
+  Date: <input type="date" name="event[date]"><br>
+  City: <input type="text" name="event[city]"><br>
+  State: <select name=event[state]><br>
+    <option>CA</option>
+    <option>AZ</option>
+    <option>WA</option>
+    <option>NJ</option>
+  </select>
+  <input type="submit" name="Add events">
+</form>
+
+
+
+
+
+

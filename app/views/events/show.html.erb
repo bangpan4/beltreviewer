@@ -1,0 +1,35 @@
+<h3><%= @events.name %></h3>
+<a href="/events/new">Events dashboard</a>
+<p><%= @events.user.first_name %> <%= @events.user.last_name %></p>
+<p><%= @events.date %></p>
+<p><%= @events.city %></p>
+<p><%= @events.state %></p>
+<p>People who are joining the event: <%= @events.joins.count%></p>
+<table border="1">
+  <tr>
+    <th>Name</th>
+    <th>Location</th>
+    <th>state</th>
+  </tr>
+  <% @events.users.each do |e| %>
+    <tr>
+      <td><%= e.first_name%> <%= e.last_name %></td>
+      <td><%= e.city%></td>
+      <td><%= e.state%></td>
+    </tr>
+  <%end%>
+</table>
+
+<h4 style="position: relative;left: 300px; top: -230px;">Discussion about this event</h4>
+<textarea style="position: relative;left: 300px; top: -225px;overflow: scroll;height: 300px;width: 300px;">
+  <% @comments.each do |c| %>
+  <%= c.user.first_name %> says: <%= c.content %>
+  <%end%>
+</textarea>
+<form action="/comments" method="post" style="position: relative;left: 300px; top: -200px;">
+  <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+  <input type="hidden" name= "event_id" value="<%= @events.id %>">
+  <input type="hidden" name= "comment[event_id]" value="<%= @events.id %>">
+  <textarea name=comment[content] style="width: 300px;height: 50px;"></textarea><br>
+  <input type="submit" value="submit comment">
+</form>

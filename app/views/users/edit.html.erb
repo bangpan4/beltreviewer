@@ -1,0 +1,17 @@
+<h2>Edit your profile</h2>
+<a href="/events/new">Events dashboard</a>
+<form action="/users/<%= @user.id %>" method = "post">
+  <input type="hidden" name="authenticity_token" value="<%=form_authenticity_token%>">
+  <input type="hidden" name="_method" value="patch">
+  First name: <input type="text" name=user[first_name] value="<%= @user.first_name %>"><br>
+  Last name: <input type="text" name=user[last_name] value="<%= @user.last_name %>"><br>
+  Email: <input type="text" name=user[email] value="<%= @user.email %>"><br>
+  City: <input type="text" name=user[city] value="<%= @user.city %>"><br>
+  State: <select name=user[state] value="<%= @user.state %>"><br>
+    <option>CA</option>
+    <option>AZ</option>
+    <option>WA</option>
+    <option>NJ</option>
+  </select><br>
+  <input type="submit" value="Update records">
+</form>
